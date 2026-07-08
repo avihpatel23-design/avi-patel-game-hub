@@ -1,11 +1,6 @@
 import { NextResponse } from 'next/server';
 import OpenAI from 'openai';
 
-const client = new OpenAI({
-  apiKey: process.env.MESH_API_KEY,
-  baseURL: 'https://api.meshapi.ai/v1',
-});
-
 export async function POST(request: Request) {
   try {
     const { question } = await request.json();
@@ -14,13 +9,18 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Question is required.' }, { status: 400 });
     }
 
+    const client = new OpenAI({
+      apiKey: process.env.MESH_API_KEY,
+      baseURL: 'https://api.meshapi.ai/v1',
+    });
+
     const response = await client.chat.completions.create({
       model: 'openai/gpt-4o-mini',
       messages: [
         {
           role: 'system',
           content:
-            'You are an AI Game Coach for Avi Patel Game Hub. Give short, useful gaming tips for Snake, Tic Tac Toe, Memory Match, Paddle Battle, Number Guess, Chess, and Rock Paper Scissors. Answer in Gujarati-English mix.',
+            'You are an AI Game Coach for Avi Patel Game Hub. Give short useful gaming tips in Gujarati-English mix.',
         },
         {
           role: 'user',
